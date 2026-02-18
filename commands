@@ -22,3 +22,34 @@ ros2 launch nav2_bringup bringup_launch.py map:=/home/tro/try.yaml
 Terminal 6:
 source /opt/ros/humble/setup.bash
 rviz2 
+
+
+Mapping:
+Terminal 1:
+source install/setup.bash
+sudo ypspur-coordinator -d /dev/ttyUSB0 --blvr -p ~/iCart3_60W0803.param
+
+Terminal 2:
+cd ~/ros2_ws
+source install/setup.bash
+ros2 run icart_mini_driver icart_mini_driver
+
+Terminal 3:|
+sudo chmod 666 /dev/ttyACM0
+source install/setup.bash
+ros2 run urg_node urg_node_driver --ros-args -p serial_port:=/dev/ttyACM0 -p frame_id:=laser -p angle_min:=-2.09 -p angle_max:=2.09
+
+Terminal 4:
+ros2 run tf2_ros static_transform_publisher 0.2 0 0 0 0 0 base_link laser & ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 base_footprint base_link
+
+Terminal 5:
+source install/setup.bash
+ros2 launch ~/cartographer_launch.py
+
+Terminal 6:
+source install/setup.bash
+ros2 launch teleop_twist_joy teleop-launch.py joy_config:='xbox'
+
+Terminal 7:
+source install/setup.bash
+rviz2
